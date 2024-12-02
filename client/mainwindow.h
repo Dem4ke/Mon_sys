@@ -1,21 +1,36 @@
 #pragma once
 
 #include <QMainWindow>
+#include "signindlg.h"
+//#include "createaccount.h"
+//#include "workwindow.h"
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
-QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
+namespace MS {
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_singIn_clicked();
+    void on_createAcc_clicked();
+
 private:
-    Ui::MainWindow *ui;
+    // Network tools
+    std::shared_ptr<Socket> socket_;  // Socket which uses to work with server
+
+private:
+    // Dialogs and UI
+    Ui::MainWindow* ui;
+    SignInDlg* signInDlg_;          // Dialog which uses to sign in user's account
+//    CreateAccount* createAccDlg_;   // Dialog which uses to create new account
+//    WorkWindow* workWindow_;        // Window with main work functions
 };
+}
+

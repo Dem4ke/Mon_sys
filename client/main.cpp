@@ -1,11 +1,24 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QLocale>
+#include <QTranslator>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    MainWindow w;
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "MonitoringSystem_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + baseName)) {
+            a.installTranslator(&translator);
+            break;
+        }
+    }
+
+    // Initialize of a start window
+    MS::MainWindow w;
     w.show();
     return a.exec();
 }

@@ -1,8 +1,8 @@
-QT       += core gui
+QT       -= gui
+QT       += core network sql
 QMAKE_CXXFLAGS += -Wa,-mbig-obj
-QT += network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
+greaterThan(QT_MAJOR_VERSION, 4):
 
 CONFIG += c++23 cmdline
 
