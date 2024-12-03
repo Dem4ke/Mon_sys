@@ -18,19 +18,19 @@ public:
     ~SignInDlg();
 
     void init(std::shared_ptr<Socket> socket);
-    bool isRegistered();
+
+    bool isRegistrated();
+    bool isAccepted();
 
 private slots:
     void on_signInButton_clicked();
 
 private:
     Ui::SignIn* ui;
-
-    bool isRegistered_ = false;
+    bool isAccepted_ = false;
 
     QString userLogin_;
     QString userPassword_;
-    std::vector<QString> userInfo_;
 
     std::shared_ptr<Socket> socket_;
 };

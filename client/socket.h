@@ -3,15 +3,15 @@
 #include <QTcpSocket>
 
 namespace MS {
-class Socket : QTcpSocket {
+class Socket : public QTcpSocket {
     Q_OBJECT
 
 public:
     Socket();
 
     // Users tools
-    void checkUserStatement(std::vector<QString>& userInfo);
-    void addUser(std::vector<QString>& userInfo);
+    void checkUserStatement(QVector<QString>& userInfo);
+    void addUser(QVector<QString>& userInfo);
 
     bool isUserExists();
 
@@ -23,13 +23,10 @@ public slots:
     void slotReadyRead();
 
 private:
-    // Принимать все равно одно что-то, нужно подумать, возможно флаг нужно будет передать
-    void sendToServer(QString output);
-    void sendToServer(QVector<QString> output);
+    void sendToServer(int flag, QVector<QString> output);
 
 private:
     quint16 blockSize_ = 0;         // Size of data package
-    QString input_;                 // Information from server
 
     QTcpSocket* socket_;            // Socket to get/put info from/to server
     QByteArray data_;               // Variable which uses to store relocates data

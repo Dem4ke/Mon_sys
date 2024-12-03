@@ -1,5 +1,5 @@
 #pragma once
-/*
+
 #include "choosetheproject.h"
 #include "qcustomplot.h"
 
@@ -38,4 +38,4 @@ namespace MS {
      Server server;
  };
 }
-*/
+

@@ -18,26 +18,37 @@ void SignInDlg::init(std::shared_ptr<Socket> socket) {
     socket_ = socket;
 }
 
-bool SignInDlg::isRegistered() {
-    return isRegistered_;
-}
-
-// Sign in user in a system
-void SignInDlg::on_signInButton_clicked() {
-    userInfo_.clear();
-
-    userLogin_ = ui->userLogin->text();
-    userPassword_ = ui->userPassword->text();
-
-    userInfo_.push_back(userLogin_);
-    userInfo_.push_back(userPassword_);
-
-    if (socket_->checkUserStatement(userInfo_)) {
-        isRegistered_ = true;
-        this->close();
+bool SignInDlg::isRegistrated() {
+    if (socket_->isUserExists()) {
+        return true;
     }
     else {
         QMessageBox::warning(this, "Denied", "User or password is wrong");
     }
+
+    return false;
+}
+
+bool SignInDlg::isAccepted() {
+    return isAccepted_;
+}
+
+// Sign in user in a system
+void SignInDlg::on_signInButton_clicked() {
+    // Set information of user
+    QVector<QString> userInfo;
+    userInfo.clear();
+
+    userLogin_ = ui->userLogin->text();
+    userPassword_ = ui->userPassword->text();
+
+    userInfo.push_back(userLogin_);
+    userInfo.push_back(userPassword_);
+
+    // Make a request to server for check user statement
+    socket_->checkUserStatement(userInfo);
+
+    isAccepted_ = true;
+    this->close();
 }
 }

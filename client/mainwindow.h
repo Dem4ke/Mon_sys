@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 #include "signindlg.h"
-//#include "createaccount.h"
+#include "createaccountdlg.h"
 //#include "workwindow.h"
 
 namespace Ui {
@@ -23,13 +23,13 @@ private slots:
 
 private:
     // Network tools
-    std::shared_ptr<Socket> socket_;  // Socket which uses to work with server
+    std::shared_ptr<Socket> socket_;    // Socket which uses to work with server
 
 private:
     // Dialogs and UI
     Ui::MainWindow* ui;
-    SignInDlg* signInDlg_;          // Dialog which uses to sign in user's account
-//    CreateAccount* createAccDlg_;   // Dialog which uses to create new account
+    SignInDlg* signInDlg_;              // Dialog which uses to sign in user's account
+    CreateAccountDlg* createAccDlg_;    // Dialog which uses to create new account
 //    WorkWindow* workWindow_;        // Window with main work functions
 };
 }

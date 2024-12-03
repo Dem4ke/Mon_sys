@@ -13,19 +13,13 @@ Socket::Socket() : QTcpSocket() {
 // USERS TOOLS
 
 // Check is user exists and his password was writed right
-void Socket::checkUserStatement(std::vector<QString>& userInfo) {
-
-
+void Socket::checkUserStatement(QVector<QString>& userInfo) {
+    sendToServer(2, userInfo);
 }
 
 // Add new user in database
-bool Socket::addUser(std::vector<QString>& userInfo) {
-    QString insertInDB = "INSERT INTO users (user_login, user_password, user_email) VALUES ('" +
-                         userInfo[0] + "', '" + userInfo[1] + "', '" + userInfo[2] + "');";
-
-    sendToServer(insertInDB);
-
-    return false;
+void Socket::addUser(QVector<QString>& userInfo) {
+    sendToServer(1, userInfo);
 }
 
 bool Socket::isUserExists() {
@@ -37,6 +31,8 @@ bool Socket::isUserExists() {
 
 // Handler of a client's messages
 void Socket::slotReadyRead() {
+    isUserExists_ = false;
+
     QDataStream input(socket_);
     input.setVersion(QDataStream::Qt_6_7);
 
@@ -58,39 +54,51 @@ void Socket::slotReadyRead() {
             }
 
             // Write data from server
-            input_.clear();
-            input >> input_;
+            QVector<QString> info;
+            int flag;
+
+            input >> flag >> info;
+
+            switch (flag) {
+            case 1: {
+                if (info[0] == "denied") {
+                    isUserExists_ = true;
+                }
+                else if (info[0] == "success") {
+                    isUserExists_ = false;
+                }
+
+                break;
+            }
+            case 2: {
+                if (info[0] == "denied") {
+                    isUserExists_ = false;
+                }
+                else if (info[0] == "success") {
+                    isUserExists_ = true;
+                }
+
+                break;
+            }
+            case 3: {
+                break;
+            }
+            }
 
             blockSize_ = 0;
+            break;
         }
     }
-
-    // Куда-то отправить информацию из полученной строки
 }
 
-void Socket::sendToServer(QString output) {
+void Socket::sendToServer(int flag, QVector<QString> output) {
     data_.clear();
 
     QDataStream out(&data_, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_7);
 
     // Calculate and write a size of the sent data package
-    out << quint16(0) << output;
-    out.device()->seek(0);
-    out << quint16(data_.size() - sizeof(quint16));
-
-    // Send package
-    socket_->write(data_);
-}
-
-void Socket::sendToServer(QVector<QString> output) {
-    data_.clear();
-
-    QDataStream out(&data_, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_6_7);
-
-    // Calculate and write a size of the sent data package
-    out << quint16(0) << output;
+    out << quint16(0) << flag << output;
     out.device()->seek(0);
     out << quint16(data_.size() - sizeof(quint16));
 

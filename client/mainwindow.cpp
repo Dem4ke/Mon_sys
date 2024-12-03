@@ -24,21 +24,40 @@ void MainWindow::on_singIn_clicked() {
     signInDlg_->setModal(true);
     signInDlg_->exec();
 
-    if (signInDlg_->isRegistered()) {
-        delete signInDlg_;
-        //hide();
-
-        //workWindow_ = new WorkWindow;
-        //workWindow_->show();
+    if (signInDlg_->isAccepted()) {
+        if (signInDlg_->isRegistrated()) {
+            delete signInDlg_;
+            //hide();
+            //workWindow->show();
+        }
+        else {
+            signInDlg_->exec();
+        }
     }
 }
 
 // Show account create window
 void MainWindow::on_createAcc_clicked() {
-    /*createAcc->setModal(true);
-    createAcc->exec();
-    if (createAcc->getUserStatus()) {
-        delete createAcc;
+    createAccDlg_ = new CreateAccountDlg;
+
+    createAccDlg_->init(socket_);
+    createAccDlg_->setModal(true);
+    createAccDlg_->exec();
+
+    if (createAccDlg_->isAccepted()) {
+        if (createAccDlg_->isRegistrated()) {
+            delete createAccDlg_;
+            //hide();
+            //workWindow->show();
+        }
+        else {
+            createAccDlg_->exec();
+        }
+    }
+
+
+    /*if (createAccDlg_->getUserStatus()) {
+        delete createAccDlg_;
         hide();
         workWindow->show();
     }*/

@@ -41,7 +41,6 @@ void Server::incomingConnection(qintptr socketDescriptor) {
     sockets_.push_back(socket);
 
     qDebug() << "client connected: " << socketDescriptor;
-    sendToClient("Connection success");
 }
 
 // Handler of a client's disconnection
@@ -57,10 +56,6 @@ void Server::clienDisconnected() {
 // Handler of a client's messages
 void Server::slotReadyRead() {
     socket = (QTcpSocket*)sender();
-
-    // Проверить как определяется сокет, которому надо будет доставить сообщение (скорее всего по дискриптору)
-    qDebug() << socket;
-    //
     QDataStream input(socket);
 
     input.setVersion(QDataStream::Qt_6_7);
@@ -68,7 +63,6 @@ void Server::slotReadyRead() {
         while(true) {
             // Calculate size of the block of data
             if (blockSize_ == 0) {
-                qDebug() << blockSize_;
                 if (socket->bytesAvailable() < 2) {
                     break;
                 }
@@ -83,19 +77,27 @@ void Server::slotReadyRead() {
                 break;
             }
 
-            // Write data to server
-            QString str;
-            input >> str;
+            // Write data from user
+            QVector<QString> info;
+            int flag;
 
-            QSqlQuery query;
-            query.exec(str);
+            input >> flag >> info;
+
             // Работа с базой данных и проверка необходимой информации
             // Здесь будет проходить проверка по флагу и будет вызываться функция с запросом
-            /*switch (index) {
-                case 0: {
+            switch (flag) {
+            case 1: {
+                addUser(info);
                 break;
-                }
-            }*/
+            }
+            case 2: {
+                checkUserStatement(info);
+                break;
+            }
+            case 3: {
+                break;
+            }
+            }
 
             blockSize_ = 0;
             break;
@@ -106,14 +108,14 @@ void Server::slotReadyRead() {
     }
 }
 
-void Server::sendToClient(QString output) {
+void Server::sendToClient(int flag, QVector<QString> output) {
     data_.clear();
 
     QDataStream out(&data_, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_6_7);
 
     // Calculate and write a size of the sent data package
-    out << quint16(0) << output;
+    out << quint16(0) << flag << output;
     out.device()->seek(0);
     out << quint16(data_.size() - sizeof(quint16));
 
@@ -121,5 +123,68 @@ void Server::sendToClient(QString output) {
     for (auto& s : sockets_) {
         s->write(data_);
     }
+}
+
+// Checks is user exists, if not, adds it in database
+void Server::addUser(QVector<QString> userInfo) {
+    QVector<QString> answerToClient;
+
+    // Check is user with the same login exists
+    bool isUserExists = false;
+    QSqlQuery query;
+    query.exec("SELECT * FROM users");
+
+    while (query.next()) {
+        QString dbLogin = query.value("user_login").toString();
+
+        if (userInfo[0] == dbLogin) {
+            isUserExists = true;
+        }
+    }
+
+    if (isUserExists) {
+        answerToClient.push_back("denied");
+    }
+    else {
+        answerToClient.push_back("success");
+
+        QString insertInDB = "INSERT INTO users (user_login, user_password, user_email) VALUES ('" +
+                             userInfo[0] + "', '" + userInfo[1] + "', '" + userInfo[2] + "');";
+
+        query.exec(insertInDB);
+    }
+
+    sendToClient(1, answerToClient);
+}
+
+
+// Checks is user exists and entered password is right
+void Server::checkUserStatement(QVector<QString> userInfo) {
+    QVector<QString> answerToClient;
+
+    // Check is user with the same login and pasword exists
+    bool isUserExists = false;
+    QSqlQuery query;
+    query.exec("SELECT * FROM users");
+
+    while (query.next()) {
+        QString dbLogin = query.value("user_login").toString();
+        QString dbPassword = query.value("user_password").toString();
+
+        qDebug() << userInfo[0] << userInfo[1];
+        qDebug() << dbLogin << dbPassword;
+        if (userInfo[0] == dbLogin && userInfo[1] == dbPassword) {
+            isUserExists = true;
+        }
+    }
+
+    if (isUserExists) {
+        answerToClient.push_back("success");
+    }
+    else {
+        answerToClient.push_back("denied");
+    }
+
+    sendToClient(2, answerToClient);
 }
 }

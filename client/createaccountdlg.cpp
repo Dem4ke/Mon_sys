@@ -16,26 +16,24 @@ void CreateAccountDlg::init(std::shared_ptr<Socket> socket) {
     socket_ = socket;
 }
 
-// Make a request to server for add the user
-bool CreateAccountDlg::createAcc(std::vector<QString>& userInfo) {
-    socket_->checkUserStatement(userInfo);
-
-    // If user doesn't exist we create a new account
-    if (!socket_->isUserExists()) {
-        socket_->addUser(userInfo);
+bool CreateAccountDlg::isRegistrated() {
+    if (socket_->isUserExists()) {
+        QMessageBox::information(this, "Success","Account has been created");
         return true;
     }
-
+    else {
+        QMessageBox::warning(this, "Denied","User with same login exists");
+    }
     return false;
 }
 
-bool CreateAccountDlg::isRegistrated() {
-    return isRegistrated_;
+bool CreateAccountDlg::isAccepted() {
+    return isAccepted_;
 }
 
 void CreateAccountDlg::on_createAccButton_clicked() {
     // Set information of user
-    userInfo.clear();
+    QVector<QString> userInfo;
 
     userLogin = ui->userLogin->text();
     userInfo.push_back(userLogin);
@@ -47,14 +45,10 @@ void CreateAccountDlg::on_createAccButton_clicked() {
     userInfo.push_back(userEmail);
 
     // Make a request to server for add the user
-    if (createAcc(userInfo)) {
-        QMessageBox::information(this, "Success","Account has been created");
-        isRegistrated_ = true;
-        this->close();
-    }
-    else {
-        QMessageBox::warning(this, "Denied","User with same login exist");
-    }
+    socket_->addUser(userInfo);
+
+    isAccepted_ = true;
+    this->close();
 }
 }
 

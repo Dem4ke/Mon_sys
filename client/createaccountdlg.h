@@ -19,22 +19,21 @@ public:
 
     void init(std::shared_ptr<Socket> socket);
 
-    bool createAcc(std::vector<QString>& userInfo);
     bool isRegistrated();
+    bool isAccepted();
 
 private slots:
     void on_createAccButton_clicked();
 
 private:
     Ui::CreateAccount *ui;
+    bool isAccepted_ = false;
 
     std::shared_ptr<Socket> socket_;
 
-    std::vector<QString> userInfo;
     QString userLogin;
     QString userPassword;
     QString userEmail;
-    bool isRegistrated_ = false;
 };
 }
 
