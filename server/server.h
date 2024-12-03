@@ -15,9 +15,10 @@ class Server : QTcpServer {
 public:
     Server();
 
+public:
+    // Database work tools
     bool connectToDatabase();
-
-    QTcpSocket* socket;
+    //void isUserExists(QString login);
 
 public slots:
     void incomingConnection(qintptr socketDescriptor);
@@ -30,6 +31,7 @@ private:
 private:
     quint16 blockSize_ = 0;             // Size of data package
 
+    QTcpSocket* socket;
     QVector<QTcpSocket*> sockets_;      // Vector of "users" of server
     QByteArray data_;                   // Information byte array which server sents to client and get from it
 };

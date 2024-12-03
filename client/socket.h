@@ -23,6 +23,7 @@ public slots:
     void slotReadyRead();
 
 private:
+    // Принимать все равно одно что-то, нужно подумать, возможно флаг нужно будет передать
     void sendToServer(QString output);
     void sendToServer(QVector<QString> output);
 
