@@ -3,7 +3,7 @@
 #include <QMainWindow>
 #include "signindlg.h"
 #include "createaccountdlg.h"
-//#include "workwindow.h"
+#include "workwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,7 +30,7 @@ private:
     Ui::MainWindow* ui;
     SignInDlg* signInDlg_;              // Dialog which uses to sign in user's account
     CreateAccountDlg* createAccDlg_;    // Dialog which uses to create new account
-//    WorkWindow* workWindow_;        // Window with main work functions
+    WorkWindow* workWindow_;            // Window with main work functions
 };
 }
 

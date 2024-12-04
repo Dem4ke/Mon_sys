@@ -35,9 +35,21 @@ void Socket::setWatersNamesRequest() {
     sendToServer(3, info);
 }
 
+// Send request to get info about chosen water from database
+void Socket::setWaterInfoRequest(QString waterName) {
+    QVector<QString> info;
+    info.push_back(waterName);
+    sendToServer(4, info);
+}
+
 // Get waters names
 QVector<QString> Socket::getWatersNames() const {
     return watersNames_;
+}
+
+// Get info about chosen water
+QVector<QString> Socket::getWaterInfo() const {
+    return waterInfo_;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -72,6 +84,7 @@ void Socket::slotReadyRead() {
             int flag;
 
             input >> flag >> info;
+            qDebug() << "server sent information";
 
             switch (flag) {
             case 1: {
@@ -96,6 +109,10 @@ void Socket::slotReadyRead() {
             }
             case 3: {
                 watersNames_ = info;
+                break;
+            }
+            case 4: {
+                waterInfo_ = info;
                 break;
             }
             }

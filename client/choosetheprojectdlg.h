@@ -12,13 +12,13 @@ class ChooseTheProjectDlg : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ChooseTheProject(QWidget *parent = nullptr);
-    ~ChooseTheProject();
+    explicit ChooseTheProjectDlg(QWidget *parent = nullptr);
+    ~ChooseTheProjectDlg();
 
     void init(std::shared_ptr<Socket> socket);
 
     void setWatersList();
-    QString getProjectName() const;
+    QVector<QString> getProjectInfo() const;
 
     bool isAccepted() const;
 

@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
     delete ui;
+    delete workWindow_;
 }
 
 // Show sing in window
@@ -27,10 +28,15 @@ void MainWindow::on_singIn_clicked() {
     if (signInDlg_->isAccepted()) {
         if (signInDlg_->isRegistrated()) {
             delete signInDlg_;
-            //hide();
-            //workWindow->show();
+
+            workWindow_ = new WorkWindow;
+            workWindow_->init(socket_);
+
+            hide();
+            workWindow_->show();
         }
         else {
+            QMessageBox::warning(this, "Denied", "User or password is wrong");
             signInDlg_->exec();
         }
     }
@@ -47,20 +53,18 @@ void MainWindow::on_createAcc_clicked() {
     if (createAccDlg_->isAccepted()) {
         if (createAccDlg_->isRegistrated()) {
             delete createAccDlg_;
-            //hide();
-            //workWindow->show();
+
+            workWindow_ = new WorkWindow;
+            workWindow_->init(socket_);
+
+            hide();
+            workWindow_->show();
         }
         else {
+            QMessageBox::warning(this, "Denied","User with same login exists");
             createAccDlg_->exec();
         }
     }
-
-
-    /*if (createAccDlg_->getUserStatus()) {
-        delete createAccDlg_;
-        hide();
-        workWindow->show();
-    }*/
 }
 }
 

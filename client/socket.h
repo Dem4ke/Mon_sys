@@ -21,11 +21,14 @@ private:
 public:
     // Waters tools
     void setWatersNamesRequest();
+    void setWaterInfoRequest(QString waterName);
 
     QVector<QString> getWatersNames() const;
+    QVector<QString> getWaterInfo() const;
 
 private:
     QVector<QString> watersNames_;
+    QVector<QString> waterInfo_;
 
 public slots:
     // Server tools

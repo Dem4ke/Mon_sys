@@ -38,6 +38,7 @@ private:
     QVector<std::pair<QString, QString>> currentProject;
     bool changeAccount = false;
     QString project;
+    QVector<QString> projectInfo_;
 };
 }
 

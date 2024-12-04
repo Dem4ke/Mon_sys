@@ -19,11 +19,11 @@ void SignInDlg::init(std::shared_ptr<Socket> socket) {
 }
 
 bool SignInDlg::isRegistrated() const {
+    socket_->waitForReadyRead();
+    qDebug() << "check is user exists";
     if (socket_->isUserExists()) {
+
         return true;
-    }
-    else {
-        QMessageBox::warning(this, "Denied", "User or password is wrong");
     }
 
     return false;
@@ -47,6 +47,8 @@ void SignInDlg::on_signInButton_clicked() {
 
     // Make a request to server for check user statement
     socket_->checkUserStatement(userInfo);
+
+
 
     isAccepted_ = true;
     this->close();

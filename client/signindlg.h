@@ -9,8 +9,7 @@ namespace Ui {
 }
 
 namespace MS {
-class SignInDlg : public QDialog
-{
+class SignInDlg : public QDialog {
     Q_OBJECT
 
 public:

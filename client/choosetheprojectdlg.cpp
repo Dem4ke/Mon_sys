@@ -2,24 +2,24 @@
 #include "ui_choosetheprojectdlg.h"
 
 namespace MS {
-ChooseTheProject::ChooseTheProject(QWidget *parent) :
+ChooseTheProjectDlg::ChooseTheProjectDlg(QWidget *parent) :
     QDialog(parent), ui(new Ui::ChooseTheProject) {
 
     ui->setupUi(this);
     setWatersList();
 }
 
-ChooseTheProject::~ChooseTheProject() {
+ChooseTheProjectDlg::~ChooseTheProjectDlg() {
     delete ui;
 }
 
 // Initialization of information about waters
-void ChooseTheProject::init(std::shared_ptr<Socket> socket) {
+void ChooseTheProjectDlg::init(std::shared_ptr<Socket> socket) {
     socket_ = socket;
     socket_->setWatersNamesRequest();
 }
 
-void ChooseTheProject::setWatersList() {
+void ChooseTheProjectDlg::setWatersList() {
     watersNames_ = socket_->getWatersNames();
 
     for (int i = 0, end = watersNames_.size(); i < end; ++i) {
@@ -27,17 +27,19 @@ void ChooseTheProject::setWatersList() {
     }
 }
 
-QString ChooseTheProject::getProjectName() const {
-    return currentProject_;
+QVector<QString> ChooseTheProjectDlg::getProjectInfo() const {
+    QVector<QString> projectInfo = socket_->getWaterInfo();
+    return projectInfo;
 }
 
-bool ChooseTheProject::isAccepted() const {
+bool ChooseTheProjectDlg::isAccepted() const {
     return isAccepted_;
 }
 
-void ChooseTheProject::on_choiceOfWater_clicked() {
-    currentProject = ui->watersNameList->currentItem()->text();
-    projectChoosen = true;
+void ChooseTheProjectDlg::on_choiceOfWater_clicked() {
+    isAccepted_ = true;
+    currentProject_ = ui->watersNameList->currentItem()->text();
+    socket_->setWaterInfoRequest(currentProject_);
     this->close();
 }
 }

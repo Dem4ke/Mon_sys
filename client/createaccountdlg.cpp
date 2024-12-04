@@ -18,11 +18,7 @@ void CreateAccountDlg::init(std::shared_ptr<Socket> socket) {
 
 bool CreateAccountDlg::isRegistrated() const {
     if (socket_->isUserExists()) {
-        QMessageBox::information(this, "Success","Account has been created");
         return true;
-    }
-    else {
-        QMessageBox::warning(this, "Denied","User with same login exists");
     }
     return false;
 }

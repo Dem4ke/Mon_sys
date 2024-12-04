@@ -11,7 +11,6 @@ WorkWindow::WorkWindow(QWidget *parent)
 
 WorkWindow::~WorkWindow() {
     delete ui;
-    delete chooseTheProject;
 }
 
 // Initialization of socket
@@ -22,7 +21,7 @@ void WorkWindow::init(std::shared_ptr<Socket> socket) {
 // Ask to server about data of project, then draw it in client
 // Draw graph of water level in water
 void WorkWindow::drawWaterLevelPlots(QString project) {
-    currentProject.clear();
+    /*currentProject.clear();
     server.openProject(project, currentProject);
 
     // Set locate to Russian, get russian month names
@@ -72,11 +71,11 @@ void WorkWindow::drawWaterLevelPlots(QString project) {
     // Add ability to move area by LBM, zoom graph with mouse weel, to select graph by LMB
     ui->plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
-    ui->plot->replot();
+    ui->plot->replot();*/
 }
 
 void WorkWindow::drawBeaufortScalePlots(QString project) {
-    currentProject.clear();
+    /*currentProject.clear();
     server.openProject(project, currentProject);
 
     // Refactor data to plots
@@ -112,7 +111,7 @@ void WorkWindow::drawBeaufortScalePlots(QString project) {
 
     ui->plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
-    ui->plot->replot();
+    ui->plot->replot();*/
 }
 
 bool WorkWindow::isUserWantToLeave() { return changeAccount; }
@@ -127,10 +126,12 @@ void WorkWindow::on_actionOpen_project_triggered() {
     chooseTheProjectDlg_->setModal(true);
     chooseTheProjectDlg_->exec();
 
-    if (chooseTheProject->isProjectChoosen()) {
-        project = chooseTheProject->getProjectName();
+    if (chooseTheProjectDlg_->isAccepted()) {
+        projectInfo_ = chooseTheProjectDlg_->getProjectInfo();
         drawWaterLevelPlots(project);
     }
+
+    delete chooseTheProjectDlg_;
 }
 
 // Log out ability to user, he can change his level
