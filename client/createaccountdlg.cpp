@@ -16,7 +16,7 @@ void CreateAccountDlg::init(std::shared_ptr<Socket> socket) {
     socket_ = socket;
 }
 
-bool CreateAccountDlg::isRegistrated() {
+bool CreateAccountDlg::isRegistrated() const {
     if (socket_->isUserExists()) {
         QMessageBox::information(this, "Success","Account has been created");
         return true;
@@ -27,7 +27,7 @@ bool CreateAccountDlg::isRegistrated() {
     return false;
 }
 
-bool CreateAccountDlg::isAccepted() {
+bool CreateAccountDlg::isAccepted() const {
     return isAccepted_;
 }
 

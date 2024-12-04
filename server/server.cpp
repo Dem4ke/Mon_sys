@@ -95,6 +95,7 @@ void Server::slotReadyRead() {
                 break;
             }
             case 3: {
+                getWatersNames();
                 break;
             }
             }
@@ -186,5 +187,19 @@ void Server::checkUserStatement(QVector<QString> userInfo) {
     }
 
     sendToClient(2, answerToClient);
+}
+
+void Server::getWatersNames() {
+    QVector<QString> answerToClient;
+
+    QSqlQuery query;
+    query.exec("SELECT * FROM waters");
+
+    while (query.next()) {
+        QString waterName = query.value("water_name").toString();
+        answerToClient.push_back(waterName);
+    }
+
+    sendToClient(3, answerToClient);
 }
 }

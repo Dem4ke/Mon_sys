@@ -10,26 +10,28 @@ CONFIG += c++23
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    choosetheproject.cpp \
+    choosetheprojectdlg.cpp \
     createaccountdlg.cpp \
     main.cpp \
     mainwindow.cpp \
+    qcustomplot.cpp \
     server.cpp \
     signindlg.cpp \
     socket.cpp \
     workwindow.cpp
 
 HEADERS += \
-    choosetheproject.h \
+    choosetheprojectdlg.h \
     createaccountdlg.h \
     mainwindow.h \
+    qcustomplot.h \
     server.h \
     signindlg.h \
     socket.h \
     workwindow.h
 
 FORMS += \
-    choosetheproject.ui \
+    choosetheprojectdlg.ui \
     createaccountdlg.ui \
     mainwindow.ui \
     signindlg.ui \

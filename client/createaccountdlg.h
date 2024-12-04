@@ -19,8 +19,8 @@ public:
 
     void init(std::shared_ptr<Socket> socket);
 
-    bool isRegistrated();
-    bool isAccepted();
+    bool isRegistrated() const;
+    bool isAccepted() const;
 
 private slots:
     void on_createAccButton_clicked();

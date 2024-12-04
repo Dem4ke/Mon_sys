@@ -13,10 +13,19 @@ public:
     void checkUserStatement(QVector<QString>& userInfo);
     void addUser(QVector<QString>& userInfo);
 
-    bool isUserExists();
+    bool isUserExists() const;
 
 private:
     bool isUserExists_ = false;
+
+public:
+    // Waters tools
+    void setWatersNamesRequest();
+
+    QVector<QString> getWatersNames() const;
+
+private:
+    QVector<QString> watersNames_;
 
 public slots:
     // Server tools

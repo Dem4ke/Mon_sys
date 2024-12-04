@@ -9,7 +9,7 @@
 #include <QSqlQuery>
 
 namespace MS {
-class Server : QTcpServer {
+class Server : public QTcpServer {
     Q_OBJECT
 
 public:
@@ -34,6 +34,7 @@ private:
 
 private:
     // Database waters tools
+    void getWatersNames();
 
 private:
     quint16 blockSize_ = 0;             // Size of data package
@@ -47,5 +48,6 @@ private:
 /*  Flags to work with database is:
     1 - insert user in database
     2 - check user statement (is login and password are correct)
-    3 - get info about water
+    3 - get waters names
+    4 - get info about choosen water
 */

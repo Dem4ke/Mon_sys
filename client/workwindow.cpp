@@ -1,16 +1,22 @@
-/*#include "workwindow.h"
+#include "workwindow.h"
 #include "ui_workwindow.h"
 
 namespace MS {
-WorkWindow::WorkWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::WorkWindow),
-    chooseTheProject(new ChooseTheProject(parent)) {
+WorkWindow::WorkWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::WorkWindow) {
+
     ui->setupUi(this);
 }
 
 WorkWindow::~WorkWindow() {
     delete ui;
     delete chooseTheProject;
+}
+
+// Initialization of socket
+void WorkWindow::init(std::shared_ptr<Socket> socket) {
+    socket_ = socket;
 }
 
 // Ask to server about data of project, then draw it in client
@@ -113,8 +119,13 @@ bool WorkWindow::isUserWantToLeave() { return changeAccount; }
 
 // Choose the project and main work logic
 void WorkWindow::on_actionOpen_project_triggered() {
-    chooseTheProject->setModal(true);
-    chooseTheProject->exec();
+    chooseTheProjectDlg_ = new ChooseTheProjectDlg;
+
+    chooseTheProjectDlg_->init(socket_);
+    chooseTheProjectDlg_->setWatersList();
+
+    chooseTheProjectDlg_->setModal(true);
+    chooseTheProjectDlg_->exec();
 
     if (chooseTheProject->isProjectChoosen()) {
         project = chooseTheProject->getProjectName();
@@ -142,4 +153,3 @@ void WorkWindow::on_beaufordScaleButton_clicked() {
     }
 }
 }
-*/

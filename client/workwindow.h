@@ -1,41 +1,43 @@
 #pragma once
 
-#include "choosetheproject.h"
+#include "choosetheprojectdlg.h"
 #include "qcustomplot.h"
 
 #include <QMainWindow>
 
 namespace Ui {
- class WorkWindow;
+class WorkWindow;
 }
 
 namespace MS {
- class WorkWindow : public QMainWindow {
-     Q_OBJECT
+class WorkWindow : public QMainWindow {
+    Q_OBJECT
 
- public:
-     explicit WorkWindow(QWidget *parent = nullptr);
-     ~WorkWindow();
+public:
+    explicit WorkWindow(QWidget *parent = nullptr);
+    ~WorkWindow();
 
-     void drawWaterLevelPlots(QString project);
-     void drawBeaufortScalePlots(QString project);
-     bool isUserWantToLeave();
+    void init(std::shared_ptr<Socket> socket);
 
- private slots:
-     void on_actionOpen_project_triggered();
-     void on_actionLog_out_triggered();
-     void on_waterLevelButton_clicked();
+    void drawWaterLevelPlots(QString project);
+    void drawBeaufortScalePlots(QString project);
+    bool isUserWantToLeave();
 
-     void on_beaufordScaleButton_clicked();
+private slots:
+    void on_actionOpen_project_triggered();
+    void on_actionLog_out_triggered();
+    void on_waterLevelButton_clicked();
+    void on_beaufordScaleButton_clicked();
 
- private:
-     Ui::WorkWindow *ui;
-     ChooseTheProject *chooseTheProject;
+private:
+    Ui::WorkWindow* ui;
+    ChooseTheProjectDlg* chooseTheProjectDlg_;
 
-     QVector<std::pair<QString, QString>> currentProject;
-     bool changeAccount = false;
-     QString project;
-     Server server;
- };
+    std::shared_ptr<Socket> socket_;
+
+    QVector<std::pair<QString, QString>> currentProject;
+    bool changeAccount = false;
+    QString project;
+};
 }
 

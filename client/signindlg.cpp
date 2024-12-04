@@ -18,7 +18,7 @@ void SignInDlg::init(std::shared_ptr<Socket> socket) {
     socket_ = socket;
 }
 
-bool SignInDlg::isRegistrated() {
+bool SignInDlg::isRegistrated() const {
     if (socket_->isUserExists()) {
         return true;
     }
@@ -29,7 +29,7 @@ bool SignInDlg::isRegistrated() {
     return false;
 }
 
-bool SignInDlg::isAccepted() {
+bool SignInDlg::isAccepted() const {
     return isAccepted_;
 }
 

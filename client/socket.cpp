@@ -22,8 +22,22 @@ void Socket::addUser(QVector<QString>& userInfo) {
     sendToServer(1, userInfo);
 }
 
-bool Socket::isUserExists() {
+bool Socket::isUserExists() const {
     return isUserExists_;
+}
+
+//--------------------------------------------------------------------------------------------------------------------------
+// WATERS TOOLS
+
+// Send request to get waters names from database
+void Socket::setWatersNamesRequest() {
+    QVector<QString> info;
+    sendToServer(3, info);
+}
+
+// Get waters names
+QVector<QString> Socket::getWatersNames() const {
+    return watersNames_;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -81,6 +95,7 @@ void Socket::slotReadyRead() {
                 break;
             }
             case 3: {
+                watersNames_ = info;
                 break;
             }
             }
