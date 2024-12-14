@@ -2,10 +2,10 @@
 
 #include <QDialog>
 #include <QMessageBox>
-#include "socket.h"
+#include <QTcpSocket>
 
 namespace Ui {
- class SignIn;
+class SignIn;
 }
 
 namespace MS {
@@ -16,22 +16,30 @@ public:
     explicit SignInDlg(QWidget *parent = nullptr);
     ~SignInDlg();
 
-    void init(std::shared_ptr<Socket> socket);
+    void init(QTcpSocket* socket);
 
     bool isRegistrated() const;
-    bool isAccepted() const;
+
+public slots:
+    // Server tools
+    void slotReadyRead();
+
+private:
+    void sendToServer(int flag, QVector<QString> output);
 
 private slots:
     void on_signInButton_clicked();
 
 private:
     Ui::SignIn* ui;
-    bool isAccepted_ = false;
+    bool isRegistrated_ = false;
 
     QString userLogin_;
     QString userPassword_;
 
-    std::shared_ptr<Socket> socket_;
+    quint16 blockSize_ = 0;         // Size of data package
+    QTcpSocket* socket_;
+    QByteArray data_;
 };
 }
 

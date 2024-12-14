@@ -23,7 +23,7 @@ private slots:
 
 private:
     // Network tools
-    std::shared_ptr<Socket> socket_;    // Socket which uses to work with server
+    QTcpSocket* socket_;                // Socket which uses to work with server
 
 private:
     // Dialogs and UI

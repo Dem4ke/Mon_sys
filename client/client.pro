@@ -15,9 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp \
-    server.cpp \
     signindlg.cpp \
-    socket.cpp \
     workwindow.cpp
 
 HEADERS += \
@@ -25,9 +23,7 @@ HEADERS += \
     createaccountdlg.h \
     mainwindow.h \
     qcustomplot.h \
-    server.h \
     signindlg.h \
-    socket.h \
     workwindow.h
 
 FORMS += \

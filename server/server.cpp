@@ -83,8 +83,6 @@ void Server::slotReadyRead() {
 
             input >> flag >> info;
 
-            // Работа с базой данных и проверка необходимой информации
-            // Здесь будет проходить проверка по флагу и будет вызываться функция с запросом
             switch (flag) {
             case 1: {
                 addUser(info);
@@ -96,6 +94,10 @@ void Server::slotReadyRead() {
             }
             case 3: {
                 getWatersNames();
+                break;
+            }
+            case 4: {
+                getWaterInfo(info);
                 break;
             }
             }
@@ -172,8 +174,6 @@ void Server::checkUserStatement(QVector<QString> userInfo) {
         QString dbLogin = query.value("user_login").toString();
         QString dbPassword = query.value("user_password").toString();
 
-        qDebug() << userInfo[0] << userInfo[1];
-        qDebug() << dbLogin << dbPassword;
         if (userInfo[0] == dbLogin && userInfo[1] == dbPassword) {
             isUserExists = true;
         }
@@ -201,5 +201,49 @@ void Server::getWatersNames() {
     }
 
     sendToClient(3, answerToClient);
+}
+
+void Server::getWaterInfo(QVector<QString> waterName) {
+    QVector<QString> answerToClient;
+    int category = 0;
+
+    QSqlQuery query;
+    query.exec("SELECT * FROM waters");
+
+    // Get info about category of water
+    while (query.next()) {
+        QString dbWaterName = query.value("water_name").toString();
+
+        if (waterName[0] == dbWaterName) {
+            category = query.value("category").toInt();
+            break;
+        }
+    }
+
+    // Get info about water's limits
+    query.exec("SELECT * FROM categories");
+
+    while (query.next()) {
+        int categoryId = query.value("category_id").toInt();
+
+        if (categoryId == category) {
+            QString waterLevelLimit = query.value("water_level_limit").toString();
+            answerToClient.push_back(waterLevelLimit);
+            break;
+        }
+    }
+
+    // Get info about water level and date of measurements
+    query.exec("SELECT * FROM public.\"" + waterName[0] + "\"");
+
+    while (query.next()) {
+        QString date = query.value("date").toString();
+        QString waterLevel = query.value("water_level").toString();
+
+        answerToClient.push_back(date);
+        answerToClient.push_back(waterLevel);
+    }
+
+    sendToClient(4, answerToClient);
 }
 }

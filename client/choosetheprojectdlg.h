@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QDialog>
-#include "socket.h"
+#include <QTcpSocket>
 
 namespace Ui {
 class ChooseTheProject;
@@ -15,12 +15,19 @@ public:
     explicit ChooseTheProjectDlg(QWidget *parent = nullptr);
     ~ChooseTheProjectDlg();
 
-    void init(std::shared_ptr<Socket> socket);
+    void init(QTcpSocket* socket);
 
-    void setWatersList();
+    void setWatersNamesRequest();
     QVector<QString> getProjectInfo() const;
 
     bool isAccepted() const;
+
+public slots:
+    // Server tools
+    void slotReadyRead();
+
+private:
+    void sendToServer(int flag, QVector<QString> output);
 
 private slots:
     void on_choiceOfWater_clicked();
@@ -29,8 +36,12 @@ private:
     Ui::ChooseTheProject *ui;
     bool isAccepted_ = false;
 
-    QString currentProject_;
     QVector<QString> watersNames_;
-    std::shared_ptr<Socket> socket_;
+    QVector<QString> waterInfo_;        // Information about water
+
+    QTcpSocket* socket_;                // Socket which uses to work with server
+    quint16 blockSize_ = 0;             // Size of data package
+    QByteArray data_;
 };
 }
+

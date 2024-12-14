@@ -1,12 +1,11 @@
 #pragma once
 
-#include "socket.h"
-
 #include <QDialog>
 #include <QMessageBox>
+#include <QTcpSocket>
 
 namespace Ui {
- class CreateAccount;
+class CreateAccount;
 }
 
 namespace MS {
@@ -17,23 +16,30 @@ public:
     explicit CreateAccountDlg(QWidget *parent = nullptr);
     ~CreateAccountDlg();
 
-    void init(std::shared_ptr<Socket> socket);
+    void init(QTcpSocket* socket);
 
     bool isRegistrated() const;
-    bool isAccepted() const;
+
+public slots:
+    // Server tools
+    void slotReadyRead();
+
+private:
+    void sendToServer(int flag, QVector<QString> output);
 
 private slots:
     void on_createAccButton_clicked();
 
 private:
     Ui::CreateAccount *ui;
-    bool isAccepted_ = false;
-
-    std::shared_ptr<Socket> socket_;
+    bool isRegistrated_ = false;
 
     QString userLogin;
     QString userPassword;
     QString userEmail;
+
+    quint16 blockSize_ = 0;         // Size of data package
+    QTcpSocket* socket_;
+    QByteArray data_;
 };
 }
-

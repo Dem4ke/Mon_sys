@@ -17,11 +17,10 @@ public:
     explicit WorkWindow(QWidget *parent = nullptr);
     ~WorkWindow();
 
-    void init(std::shared_ptr<Socket> socket);
+    void init(QTcpSocket* socket);
 
-    void drawWaterLevelPlots(QString project);
-    void drawBeaufortScalePlots(QString project);
-    bool isUserWantToLeave();
+    void drawWaterLevelPlots();
+    void drawBeaufortScalePlots();
 
 private slots:
     void on_actionOpen_project_triggered();
@@ -30,13 +29,22 @@ private slots:
     void on_beaufordScaleButton_clicked();
 
 private:
+    // Plots tools
+    int getTimeFromString(QString date);
+    int currentProjectMinValue();
+    int currentProjectMaxValue();
+
+private:
+    int waterLevelLimit_ = 0;
+
+private:
     Ui::WorkWindow* ui;
     ChooseTheProjectDlg* chooseTheProjectDlg_;
 
-    std::shared_ptr<Socket> socket_;
+    QTcpSocket* socket_;                // Socket which uses to work with server
 
-    QVector<std::pair<QString, QString>> currentProject;
-    bool changeAccount = false;
+    QVector<std::pair<int, int>> currentProject;
+
     QString project;
     QVector<QString> projectInfo_;
 };

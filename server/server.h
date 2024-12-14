@@ -35,6 +35,7 @@ private:
 private:
     // Database waters tools
     void getWatersNames();
+    void getWaterInfo(QVector<QString> waterName);
 
 private:
     quint16 blockSize_ = 0;             // Size of data package
